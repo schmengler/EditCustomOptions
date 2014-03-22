@@ -15,9 +15,9 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	public function updateItemOptionsAction()
 	{
-		$this->_updateOrderItem($this->_updateQuoteItem());
+		$this->_updateOrderItem($this->_updateQuoteItem())->_addStatusHistoryComment();
 
-		Mage::getSingleton('core/session')->addSuccess('Updated options');
+		Mage::getSingleton('core/session')->addSuccess($this->__('Updated Custom Options'));
 		$this->_redirect('sales/order/view', array('order_id' => $this->_getOrderItem()->getOrder()->getId()));
 	}
 	/**
@@ -47,6 +47,19 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 		$this->_getOrderItem()
 			->setProductOptions($tmpOrderItem->getProductOptions())
 			->setQuoteItemId($quoteItem->getId())
+			->save();
+
+		return $this;
+	}
+	/**
+	 * Add comment in order history
+	 * 
+	 * @return SSE_EditCustomOptions_OrderController
+	 */
+	protected function _addStatusHistoryComment()
+	{
+		$this->_getOrderItem()->getOrder()
+			->addStatusHistoryComment($this->__('Updated Custom Options'))
 			->save();
 
 		return $this;
