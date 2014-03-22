@@ -50,6 +50,7 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 		$tmpOrderItem = Mage::getModel('sales/convert_quote')->itemToOrderItem($quoteItem);
 		$this->_getOrderItem()
 			->setProductOptions($tmpOrderItem->getProductOptions())
+			->setSku($tmpOrderItem->getSku())
 			->setQuoteItemId($quoteItem->getId())
 			->save();
 
