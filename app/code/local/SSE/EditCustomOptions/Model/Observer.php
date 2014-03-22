@@ -16,7 +16,7 @@ class SSE_EditCustomOptions_Model_Observer
 	public function addPopupBlockToLayout(Varien_Event_Observer $observer)
 	{
 		$block = $observer->getBlock();
-		if ($block instanceof Mage_Sales_Block_Order_Item_Renderer_Default) {
+		if ($this->_shouldAddPopup($block)) {
 			/* @var $container Mage_Core_Block_Text_List */
 			$container = $block->getLayout()->getBlock('additional.product.info');
 			$popup = $block->getLayout()->createBlock(SSE_EditCustomOptions_Block_Popup::ALIAS, 'additional.product.info.customoptions', array('template' => 'sse/editcustomoptions/popup.phtml'));
@@ -31,10 +31,15 @@ class SSE_EditCustomOptions_Model_Observer
 	public function removePopupBlockFromLayout(Varien_Event_Observer $observer)
 	{
 		$block = $observer->getBlock();
-		if ($block instanceof Mage_Sales_Block_Order_Item_Renderer_Default) {
+		if ($this->_shouldAddPopup($block)) {
 			/* @var $container Mage_Core_Block_Text_List */
 			$container = $block->getLayout()->getBlock('additional.product.info');
 			$container->unsetChild(self::POPUP_ALIAS_IN_LAYOUT);
 		}
+	}
+	protected function _shouldAddPopup(Mage_Core_Block_Abstract $block)
+	{
+		return $block instanceof Mage_Sales_Block_Order_Item_Renderer_Default
+			&& Mage::helper('editcustomoptions/data')->isOrderEditable($block->getOrder());
 	}
 }

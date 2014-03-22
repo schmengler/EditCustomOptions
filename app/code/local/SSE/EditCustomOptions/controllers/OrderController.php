@@ -15,9 +15,13 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	public function updateItemOptionsAction()
 	{
-		$this->_updateOrderItem($this->_updateQuoteItem())->_addStatusHistoryComment();
+		if (Mage::helper('editcustomoptions/data')->isOrderEditable($this->_getOrderItem()->getOrder())) {
+			$this->_updateOrderItem($this->_updateQuoteItem())->_addStatusHistoryComment();
+			Mage::getSingleton('core/session')->addSuccess($this->__('Updated Custom Options'));
+		} else {
+			Mage::getSingleton('core/session')->addError($this->__('Order cannot be changed anymore'));
+		}
 
-		Mage::getSingleton('core/session')->addSuccess($this->__('Updated Custom Options'));
 		$this->_redirect('sales/order/view', array('order_id' => $this->_getOrderItem()->getOrder()->getId()));
 	}
 	/**
@@ -71,6 +75,7 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	protected function _getUpdatedBuyRequest()
 	{
+		//TODO validate request, do not allow options with prices
 		$options = $this->_getOrderItem()->getProductOptions();
 		// + operator instead of array_merge to handle duplicate numeric keys
 		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];

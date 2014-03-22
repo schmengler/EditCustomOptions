@@ -60,4 +60,11 @@
             </editcustomoptions>
         </routers>
     </frontend>
+    <default>
+        <sales>
+            <editcustomoptions>
+                <allowed_order_state>new,holded</allowed_order_state>
+            </editcustomoptions>
+        </sales>
+    </default>
 </config>
