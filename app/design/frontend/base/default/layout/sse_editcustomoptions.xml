@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout version="0.1.0">
+	<sales_order_view>
+	<!-- TODO add popup via observer instead ? -->
+	    <reference name="order_items">
+	        <action method="addItemRender"><type>default</type><block>sales/order_item_renderer_default</block><template>sse/editcustomoptions/order/items/renderer/default.phtml</template></action>
+	    </reference>
+	</sales_order_view>
+</layout>

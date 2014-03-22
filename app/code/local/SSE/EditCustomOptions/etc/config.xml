@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <modules>
+        <SSE_EditCustomOptions>
+            <version>0.0.0.1</version>
+        </SSE_EditCustomOptions>
+    </modules>
+    <global>
+        <models>
+            <editcustomoptions>
+                <class>SSE_EditCustomOptions_Model</class>
+            </editcustomoptions>
+        </models>
+        <blocks>
+            <editcustomoptions>
+                <class>SSE_EditCustomOptions_Block</class>
+            </editcustomoptions>
+        </blocks>
+    </global>
+    <frontend>
+    	<layout>
+    		<updates>
+    			<editcustomoptions>
+    				<file>sse_editcustomoptions.xml</file>
+    			</editcustomoptions>
+    		</updates>
+    	</layout>
+    </frontend>
+</config>

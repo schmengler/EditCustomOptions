@@ -1,0 +1,4 @@
+app/code/local/SSE/EditCustomOptions	app/code/local/SSE/EditCustomOptions
+app/design/frontend/base/default/layout/sse_editcustomoptions.xml	app/design/frontend/base/default/layout/sse_editcustomoptions.xml
+app/design/frontend/base/default/template/sse/editcustomoptions	app/design/frontend/base/default/template/sse/editcustomoptions
+app/etc/modules/SSE_EditCustomOptions.xml	app/etc/modules/SSE_EditCustomOptions.xml
