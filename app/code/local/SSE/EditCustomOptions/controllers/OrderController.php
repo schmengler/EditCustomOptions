@@ -1,9 +1,16 @@
 <?php
+/**
+ * Controller for custom option edit form action
+ * 
+ * @author Fabian Schmengler
+ *
+ */
 class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_Action
 {
 	protected $_quote;
+	protected $_quoteItem;
 	protected $_order;
-	protected $_item;
+	protected $_orderItem;
 
 	/**
 	 * similar to Mage_Checkout_CartController::updateItemOptionsAction(), but saves the quote
@@ -11,28 +18,54 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	public function updateItemOptionsAction()
 	{
-		$options = $this->_getOrderItem()->getProductOptions();
-		// + operator instead of array_merge to handle duplicate numeric keys
-		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];
-
-		$quoteItem = $this->_getQuote()->getItemById($this->_getOrderItem()->getQuoteItemId());
-		$quoteItem = $this->_getQuote()->updateItem(
-				$this->_getOrderItem()->getQuoteItemId(),
-				$options['info_buyRequest']);
-
-		$this->_getQuote()->save();
-		$this->_getOrderItem()->setQuoteItemId($quoteItem->getId())
-			->save();
-
-		// reload quote item with options (only provided through collection)
-		//TODO option collection with addItemFilter might work too
-		$quoteItem = $quoteItem->getCollection()->setQuote($this->_getQuote())->addFieldToFilter('item_id', $quoteItem->getId())->getFirstItem();
-
-		$tmpOrderItem = Mage::getModel('sales/convert_quote')->itemToOrderItem($quoteItem);
-		$this->_getOrderItem()->setProductOptions($tmpOrderItem->getProductOptions())->save();
+		$this->_updateQuoteItem();
+		$this->_updateOrderItem();
 
 		Mage::getSingleton('core/session')->addSuccess('Updated options');
 		$this->_redirect('sales/order/view', array('order_id' => $this->_getOrder()->getId()));
+	}
+	/**
+	 * Updates custom options in quote item based on request
+	 * 
+	 * @return SSE_EditCustomOptions_OrderController
+	 */
+	protected function _updateQuoteItem()
+	{
+		$this->_quoteItem = $this->_getQuote()->getItemById($this->_getOrderItem()->getQuoteItemId());
+		$this->_quoteItem = $this->_getQuote()->updateItem(
+				$this->_getOrderItem()->getQuoteItemId(),
+				$this->_getUpdatedBuyRequest());
+		
+		$this->_getQuote()->save();
+
+		return $this;
+	}
+	/**
+	 * Updates custom options in order item based on updated quote item
+	 * 
+	 * @return SSE_EditCustomOptions_OrderController
+	 */
+	protected function _updateOrderItem()
+	{
+		$tmpOrderItem = Mage::getModel('sales/convert_quote')->itemToOrderItem($this->_quoteItem);
+		$this->_getOrderItem()
+			->setProductOptions($tmpOrderItem->getProductOptions())
+			->setQuoteItemId($this->_quoteItem->getId())
+			->save();
+
+		return $this;
+	}
+	/**
+	 * Returns the buyRequest array with updated custom options
+	 * 
+	 * @return array
+	 */
+	protected function _getUpdatedBuyRequest()
+	{
+		$options = $this->_getOrderItem()->getProductOptions();
+		// + operator instead of array_merge to handle duplicate numeric keys
+		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];
+		return $options['info_buyRequest'];
 	}
 	/**
 	 * Returns quote for the order
@@ -65,18 +98,18 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	protected function _getOrderItem()
 	{
-		if ($this->_item === null) {
+		if ($this->_orderItem === null) {
 			$itemId = (int) $this->getRequest()->getParam('item_id');
 			if ($itemId === 0) {
 				Mage::throwException('No order item ID specified');
 			}
 			$item = Mage::getModel('sales/order_item')->load($itemId);
 			if ($item->getId() == $itemId) {
-				$this->_item = $item;
+				$this->_orderItem = $item;
 			} else {
 				Mage::throwException("Order item ID {$itemId} not found");
 			}
 		}
-		return $this->_item;
+		return $this->_orderItem;
 	}
 }
