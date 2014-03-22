@@ -12,6 +12,17 @@
 		<p class="note"><?php echo $this->__('Field disabled for editing'); ?></p>
 		<div class="buttons-set">
 			<button type="submit" class="button btn-save"><span><?php echo $this->__('OK'); ?></span></button>
-			<button type="reset" class="button btn-cancel"><span><?php echo $this->__('Cancel'); ?></span></button>
+			<button type="reset" class="button btn-cancel" onclick="closeWindow();"><span><?php echo $this->__('Cancel'); ?></span></button>
 		</div>
 	</form>
+	
+<script type="text/javascript">// <![CDATA[
+function closeWindow() {
+	if(parent.Windows && frameElement) {
+		var mydiv = $(frameElement).up("div");
+		var mydivid = mydiv.id;
+		var win = parent.Windows.getWindow(mydivid);
+		win.close();
+	}
+}
+//]]></script>
