@@ -10,21 +10,22 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 	const ALIAS = 'editcustomoptions/options';
 
 	/**
-	 * Block of item in order overview
+	 * Order item
 	 * 
 	 * @var Mage_Sales_Model_Order_Item
 	 */
 	protected $_item;
-	/**
-	 * @var string
-	 */
-	protected $_optionsDivId;
 
+	/**
+	 * Initialize block with order item
+	 * 
+	 * @param Mage_Sales_Model_Order_Item $item
+	 * @return SSE_EditCustomOptions_Block_Options
+	 */
 	public function init(Mage_Sales_Model_Order_Item $item)
 	{
 		$this->_item = $item;
 
-		$this->_optionsDivId = 'option_edit_' . $this->_item->getId();
 		$_product = $this->_item->getProduct();
 		$_buyRequest = new Varien_Object();
 		$_options = array();
@@ -43,15 +44,7 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 		return $this;
 	}
 	/**
-	 * Returns unique ID for the options popup div element
-	 * 
-	 * @return string
-	 */
-	public function getOptionsDivId()
-	{
-		return $this->_optionsDivId;
-	}
-	/**
+	 * Return custom options from item
 	 * 
 	 * @see Mage_Sales_Block_Order_Item_Renderer_Default::getItemOptions()
 	 * @return array
