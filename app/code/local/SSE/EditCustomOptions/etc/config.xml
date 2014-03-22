@@ -11,6 +11,11 @@
                 <class>SSE_EditCustomOptions_Model</class>
             </editcustomoptions>
         </models>
+        <helpers>
+            <editcustomoptions>
+                <class>SSE_EditCustomOptions_Helper</class>
+            </editcustomoptions>
+        </helpers>
         <blocks>
             <editcustomoptions>
                 <class>SSE_EditCustomOptions_Block</class>

@@ -3,12 +3,18 @@
 ?>
 <a href="#" onclick="$('<?php echo $this->getOptionsDivId(); ?>').show();return false;">Edit Options</a>
 <div id="<?php echo $this->getOptionsDivId() ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
+	<h3><?php echo $this->__('Custom Options'); ?></h3>
 	<form method="post" action="<?php echo $this->getFormAction() ?>">
 		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <?php
-    echo $this->getChildHtml('options');
+    echo $this->getChildHtml('wrapper');
 ?>
-		Qty: <input type="text" readonly="readonly" name="qty" value="<?php echo $this->getItem()->getQtyOrdered(); ?>" />
-		<button type="submit">Änderungen speichern</button>
+		<h3><?php echo $this->__('Quantity'); ?></h3>
+		<input type="text" readonly="readonly" name="qty" value="<?php echo $this->getQty(); ?>" />
+		<p class="note"><?php echo $this->__('Field disabled for editing'); ?></p>
+		<div class="buttons-set">
+			<button type="submit" class="button btn-save"><span><?php echo $this->__('OK'); ?></span></button>
+			<button type="reset" class="button btn-cancel"><span><?php echo $this->__('Cancel'); ?></span></button>
+		</div>
 	</form>
 </div>

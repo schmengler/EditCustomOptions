@@ -33,10 +33,14 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 		$this->_item = $this->getParentBlock()->getItem();
 		$this->_optionsDivId = 'option_edit_' . $this->getItem()->getId();
 
+		$wrapperBlock = $this->getLayout()->createBlock('catalog/product_view', 'additional.product.info.customoptions.wrapper',
+				array('template' => 'catalog/product/view/options/wrapper.phtml', 'product_id' => $this->getItem()->getProductId()));
+		$this->append($wrapperBlock, 'wrapper');
+
 		/* @var $optionsBlock SSE_EditCustomOptions_Block_Options */
 		$optionsBlock = $this->getLayout()->createBlock(SSE_EditCustomOptions_Block_Options::ALIAS, 'additional.product.info.customoptions.options');
 		$optionsBlock->init($this->getItem());
-		$this->append($optionsBlock, 'options');
+		$wrapperBlock->append($optionsBlock, 'options');
 	}
 	/**
 	 * Returns order item
@@ -55,6 +59,10 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 	public function getOptionsDivId()
 	{
 		return $this->_optionsDivId;
+	}
+	public function getQty()
+	{
+		return $this->getItem()->getQtyOrdered() * 1;
 	}
 	/**
 	 * Returns URL for form action
