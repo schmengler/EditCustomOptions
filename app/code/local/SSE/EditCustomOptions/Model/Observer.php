@@ -40,6 +40,7 @@ class SSE_EditCustomOptions_Model_Observer
 	protected function _shouldAddPopup(Mage_Core_Block_Abstract $block)
 	{
 		return $block instanceof Mage_Sales_Block_Order_Item_Renderer_Default
-			&& Mage::helper('editcustomoptions/data')->isOrderEditable($block->getOrder());
+			&& Mage::helper('editcustomoptions/data')->isOrderEditable($block->getOrder())
+			&& $block->getItem()->getProduct()->getHasOptions();
 	}
 }
