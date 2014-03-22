@@ -25,5 +25,25 @@
     			</editcustomoptions>
     		</updates>
     	</layout>
+    	<events>
+           <core_block_abstract_to_html_before>
+               <observers>
+                   <editcustomoptions>
+                       <type>singleton</type>
+                       <class>editcustomoptions/observer</class>
+                       <method>addPopupBlockToLayout</method>
+                   </editcustomoptions>
+               </observers>
+           </core_block_abstract_to_html_before>
+           <core_block_abstract_to_html_after>
+               <observers>
+                   <editcustomoptions>
+                       <type>singleton</type>
+                       <class>editcustomoptions/observer</class>
+                       <method>removePopupBlockFromLayout</method>
+                   </editcustomoptions>
+               </observers>
+           </core_block_abstract_to_html_after>
+    	</events>
     </frontend>
 </config>
