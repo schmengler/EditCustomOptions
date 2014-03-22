@@ -7,9 +7,6 @@
  */
 class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_Action
 {
-	protected $_quote;
-	protected $_quoteItem;
-	protected $_order;
 	protected $_orderItem;
 
 	/**
@@ -18,39 +15,38 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	 */
 	public function updateItemOptionsAction()
 	{
-		$this->_updateQuoteItem();
-		$this->_updateOrderItem();
+		$this->_updateOrderItem($this->_updateQuoteItem());
 
 		Mage::getSingleton('core/session')->addSuccess('Updated options');
-		$this->_redirect('sales/order/view', array('order_id' => $this->_getOrder()->getId()));
+		$this->_redirect('sales/order/view', array('order_id' => $this->_getOrderItem()->getOrder()->getId()));
 	}
 	/**
 	 * Updates custom options in quote item based on request
 	 * 
-	 * @return SSE_EditCustomOptions_OrderController
+	 * @return Mage_Sales_Model_Quote_Item
 	 */
 	protected function _updateQuoteItem()
 	{
-		$this->_quoteItem = $this->_getQuote()->getItemById($this->_getOrderItem()->getQuoteItemId());
-		$this->_quoteItem = $this->_getQuote()->updateItem(
+		/* @var $quote Mage_Sales_Model_Quote */
+		$quote = Mage::getModel('sales/quote')->load($this->_getOrderItem()->getOrder()->getQuoteId());
+		$quoteItem = $quote->updateItem(
 				$this->_getOrderItem()->getQuoteItemId(),
 				$this->_getUpdatedBuyRequest());
-		
-		$this->_getQuote()->save();
+		$quoteItem->save();
 
-		return $this;
+		return $quoteItem;
 	}
 	/**
 	 * Updates custom options in order item based on updated quote item
 	 * 
 	 * @return SSE_EditCustomOptions_OrderController
 	 */
-	protected function _updateOrderItem()
+	protected function _updateOrderItem(Mage_Sales_Model_Quote_Item $quoteItem)
 	{
-		$tmpOrderItem = Mage::getModel('sales/convert_quote')->itemToOrderItem($this->_quoteItem);
+		$tmpOrderItem = Mage::getModel('sales/convert_quote')->itemToOrderItem($quoteItem);
 		$this->_getOrderItem()
 			->setProductOptions($tmpOrderItem->getProductOptions())
-			->setQuoteItemId($this->_quoteItem->getId())
+			->setQuoteItemId($quoteItem->getId())
 			->save();
 
 		return $this;
@@ -66,30 +62,6 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 		// + operator instead of array_merge to handle duplicate numeric keys
 		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];
 		return $options['info_buyRequest'];
-	}
-	/**
-	 * Returns quote for the order
-	 * 
-	 * @return Mage_Sales_Model_Quote
-	 */
-	protected function _getQuote()
-	{
-		if ($this->_quote === null) {
-			$this->_quote = Mage::getModel('sales/quote')->load($this->_getOrder()->getQuoteId());
-		}
-		return $this->_quote;
-	}
-	/**
-	 * Returns the order
-	 * 
-	 * @return Mage_Sales_Model_Order
-	 */
-	protected function _getOrder()
-	{
-		if ($this->_order === null) {
-			$this->_order = $this->_getOrderItem()->getOrder();
-		}
-		return $this->_order;
 	}
 	/**
 	 * Returns the order item
