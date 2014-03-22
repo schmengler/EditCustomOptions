@@ -45,5 +45,14 @@
                </observers>
            </core_block_abstract_to_html_after>
     	</events>
+        <routers>
+            <editcustomoptions>
+                <use>standard</use>
+                <args>
+                    <module>SSE_EditCustomOptions</module>
+                    <frontName>editcustomoptions</frontName>
+                </args>
+            </editcustomoptions>
+        </routers>
     </frontend>
 </config>

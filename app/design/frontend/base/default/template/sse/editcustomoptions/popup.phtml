@@ -3,7 +3,12 @@
 ?>
 <a href="#" onclick="$('<?php echo $this->getOptionsDivId(); ?>').show();return false;">Edit Options</a>
 <div id="<?php echo $this->getOptionsDivId() ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
+	<form method="post" action="<?php echo $this->getFormAction() ?>">
+		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <?php
     echo $this->getChildHtml('options');
 ?>
+		Qty: <input type="text" readonly="readonly" name="qty" value="<?php echo $this->getItem()->getQtyOrdered(); ?>" />
+		<button type="submit">Änderungen speichern</button>
+	</form>
 </div>
