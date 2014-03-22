@@ -65,4 +65,25 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 		}
 		return $result;
 	}
+	/**
+	 * Unset all options with prices
+	 * 
+	 * (non-PHPdoc)
+	 * @see Mage_Catalog_Block_Product_View_Options::getOptions()
+	 */
+	public function getOptions()
+	{
+		$options = parent::getOptions();
+		foreach ($options as $key => $option) {
+			/* @var $option Mage_Catalog_Model_Product_Option */
+			foreach ($option->getValuesCollection() as $value) {
+				/* @var $value Mage_Catalog_Model_Product_Option_Value */
+				if ($value->getPrice() * 1 > 0) {
+					unset($options[$key]);
+					continue 2;
+				}
+			}
+		}
+		return $options;
+	}
 }
