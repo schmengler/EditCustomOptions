@@ -1,10 +1,8 @@
 <?php
 /* @var $this SSE_EditCustomOptions_Block_Popup */
 ?>
-<a href="#" onclick="$('<?php echo $this->getOptionsDivId(); ?>').show();return false;">Edit Options</a>
-<div id="<?php echo $this->getOptionsDivId() ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
 	<h3><?php echo $this->__('Custom Options'); ?></h3>
-	<form method="post" action="<?php echo $this->getFormAction() ?>">
+	<form method="post" target="_parent" action="<?php echo $this->getFormAction() ?>">
 		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <?php
     echo $this->getChildHtml('wrapper');
@@ -17,4 +15,3 @@
 			<button type="reset" class="button btn-cancel"><span><?php echo $this->__('Cancel'); ?></span></button>
 		</div>
 	</form>
-</div>

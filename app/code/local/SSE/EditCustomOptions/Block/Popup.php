@@ -15,10 +15,6 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 	 * @var Mage_Sales_Model_Order_Item
 	 */
 	protected $_item;
-	/**
-	 * @var string
-	 */
-	protected $_optionsDivId;
 
 	/**
 	 * initialize options block
@@ -30,9 +26,6 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 	{
 		parent::_construct();
 
-		$this->_item = $this->getParentBlock()->getItem();
-		$this->_optionsDivId = 'option_edit_' . $this->getItem()->getId();
-
 		$wrapperBlock = $this->getLayout()->createBlock('catalog/product_view', 'additional.product.info.customoptions.wrapper',
 				array('template' => 'catalog/product/view/options/wrapper.phtml', 'product_id' => $this->getItem()->getProductId()));
 		$this->append($wrapperBlock, 'wrapper');
@@ -43,6 +36,17 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 		$wrapperBlock->append($optionsBlock, 'options');
 	}
 	/**
+	 * Set order item
+	 * 
+	 * @param Mage_Sales_Model_Order_Item $item
+	 * @return SSE_EditCustomOptions_Block_Popup
+	 */
+	public function setItem(Mage_Sales_Model_Order_Item $item)
+	{
+		$this->_item = $item;
+		return $this;
+	}
+	/**
 	 * Returns order item
 	 * 
 	 * @return Mage_Sales_Model_Order_Item
@@ -50,15 +54,6 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 	public function getItem()
 	{
 		return $this->_item;
-	}
-	/**
-	 * Returns unique ID for the options popup div element
-	 * 
-	 * @return string
-	 */
-	public function getOptionsDivId()
-	{
-		return $this->_optionsDivId;
 	}
 	public function getQty()
 	{

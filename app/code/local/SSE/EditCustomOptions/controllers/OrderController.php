@@ -9,6 +9,12 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 {
 	protected $_orderItem;
 
+	public function editAction()
+	{
+		$this->loadLayout();
+		$this->getLayout()->getBlock('customoptions_popup')->setItem($this->_getOrderItem());
+		$this->renderLayout();
+	}
 	/**
 	 * similar to Mage_Checkout_CartController::updateItemOptionsAction(), but saves the quote
 	 * directy without using the cart and then copies the updated options to the order

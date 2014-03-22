@@ -6,7 +6,7 @@
  */
 class SSE_EditCustomOptions_Model_Observer
 {
-	const POPUP_ALIAS_IN_LAYOUT = 'custom_options_popup';
+	const POPUP_ALIAS_IN_LAYOUT = 'custom_options_edit_link';
 	/**
 	 * Adds popup block with custom option form to be used by item renderer in order overview
 	 * 
@@ -19,7 +19,7 @@ class SSE_EditCustomOptions_Model_Observer
 		if ($this->_shouldAddPopup($block)) {
 			/* @var $container Mage_Core_Block_Text_List */
 			$container = $block->getLayout()->getBlock('additional.product.info');
-			$popup = $block->getLayout()->createBlock(SSE_EditCustomOptions_Block_Popup::ALIAS, 'additional.product.info.customoptions', array('template' => 'sse/editcustomoptions/popup.phtml'));
+			$popup = $block->getLayout()->createBlock(SSE_EditCustomOptions_Block_Link::ALIAS, 'additional.product.info.customoptions', array('template' => 'sse/editcustomoptions/link.phtml'));
 			$container->append($popup, self::POPUP_ALIAS_IN_LAYOUT);
 		}
 	}
