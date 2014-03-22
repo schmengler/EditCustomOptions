@@ -12,23 +12,23 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 	/**
 	 * Block of item in order overview
 	 * 
-	 * @var Mage_Sales_Block_Order_Item_Renderer_Default
+	 * @var Mage_Sales_Model_Order_Item
 	 */
-	protected $_itemRenderer;
+	protected $_item;
 	/**
 	 * @var string
 	 */
 	protected $_optionsDivId;
 
-	public function init(Mage_Sales_Block_Order_Item_Renderer_Default $itemRenderer)
+	public function init(Mage_Sales_Model_Order_Item $item)
 	{
-		$this->_itemRenderer = $itemRenderer;
+		$this->_item = $item;
 
-		$this->_optionsDivId = 'option_edit_' . $this->_itemRenderer->getItem()->getId();
-		$_product = $this->_itemRenderer->getItem()->getProduct();
+		$this->_optionsDivId = 'option_edit_' . $this->_item->getId();
+		$_product = $this->_item->getProduct();
 		$_buyRequest = new Varien_Object();
 		$_options = array();
-		foreach ($this->_itemRenderer->getItemOptions() as $_option) {
+		foreach ($this->_getItemOptions() as $_option) {
 			$_options[$_option['option_id']] = $_option['option_value'];
 		}
 		$_buyRequest->setOptions($_options);
@@ -50,5 +50,26 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 	public function getOptionsDivId()
 	{
 		return $this->_optionsDivId;
+	}
+	/**
+	 * 
+	 * @see Mage_Sales_Block_Order_Item_Renderer_Default::getItemOptions()
+	 * @return array
+	 */
+	protected function _getItemOptions()
+	{
+		$result = array();
+		if ($options = $this->_item->getProductOptions()) {
+			if (isset($options['options'])) {
+				$result = array_merge($result, $options['options']);
+			}
+			if (isset($options['additional_options'])) {
+				$result = array_merge($result, $options['additional_options']);
+			}
+			if (isset($options['attributes_info'])) {
+				$result = array_merge($result, $options['attributes_info']);
+			}
+		}
+		return $result;
 	}
 }

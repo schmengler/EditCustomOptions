@@ -1,9 +1,7 @@
 <?php
-$renderer = $this->getLayout()->createBlock('sales/order_item_renderer_default');
-$renderer->setItem($this->getParentBlock()->getItem());
 /* @var $optionsBlock SSE_EditCustomOptions_Block_Options */
 $optionsBlock = $this->getLayout()->createBlock(SSE_EditCustomOptions_Block_Options::ALIAS);
-$optionsBlock->init($renderer);
+$optionsBlock->init($this->getParentBlock()->getItem());
 ?>
 <a href="#" onclick="$('<?php echo $optionsBlock->getOptionsDivId(); ?>').show();return false;">Edit Options</a>
 <div id="<?php echo $optionsBlock->getOptionsDivId() ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
