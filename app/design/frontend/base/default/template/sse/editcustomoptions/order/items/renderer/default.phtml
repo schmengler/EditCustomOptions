@@ -63,27 +63,14 @@
         
 <?php
 //BEGIN CUSTOM OPTIONS
-$_optionsDivId = 'option_edit_' . $_item->getId();
-$_product = $this->getItem()->getProduct();
-$_buyRequest = new Varien_Object();
-$_options = array();
-foreach ($this->getItemOptions() as $_option) {
-	$_options[$_option['option_id']] = $_option['option_value'];
-}
-$_buyRequest->setOptions($_options);
-Mage::helper('catalog/product')->prepareProductOptions($_product, $_buyRequest);
+/* @var $optionsBlock SSE_EditCustomOptions_Block_Options */
+$optionsBlock = $this->getLayout()->createBlock(SSE_EditCustomOptions_Block_Options::ALIAS);
+$optionsBlock->init($this);
 ?>
-<a href="#" onclick="$('<?php echo $_optionsDivId; ?>').show();return false;">Edit Options</a>
-<div id="<?php echo $_optionsDivId ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
+<a href="#" onclick="$('<?php echo $optionsBlock->getOptionsDivId(); ?>').show();return false;">Edit Options</a>
+<div id="<?php echo $optionsBlock->getOptionsDivId() ?>" style="display:none; border: 1px solid #ccc; padding: 10px; margin-left: 10px;">
 <?php
-    echo $this->getLayout()->createBlock(SSE_EditCustomOptions_Block_Options::ALIAS)
-        ->addOptionRenderer('text', 'catalog/product_view_options_type_text', 'catalog/product/view/options/type/text.phtml')
-        ->addOptionRenderer('file', 'catalog/product_view_options_type_file', 'catalog/product/view/options/type/file.phtml')
-        ->addOptionRenderer('select', 'catalog/product_view_options_type_select', 'catalog/product/view/options/type/select.phtml')
-        ->addOptionRenderer('date', 'catalog/product_view_options_type_date', 'catalog/product/view/options/type/date.phtml')
-        ->setTemplate('catalog/product/view/options.phtml')
-        ->setProduct($_product)
-    	->toHtml();
+    echo $optionsBlock->toHtml();
 ?>
 </div>   
 <?php
