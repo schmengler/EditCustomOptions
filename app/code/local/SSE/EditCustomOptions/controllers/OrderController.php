@@ -100,22 +100,29 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 		return $this;
 	}
 	/**
-	 * Returns the buyRequest object with updated custom options
+	 * Returns the buyRequest object with updated custom options.
 	 * 
 	 * @return Varien_Object
 	 */
 	protected function _getUpdatedBuyRequest()
 	{
-		//TODO validate request, do not allow options with prices
 		$options = $this->_getOrderItem()->getProductOptions();
 
-		// replace options in original buyRequest array
+		// replace options in original buyRequest array, if they do not affect price
+		$requestOptions = $this->getRequest()->getParam('options', array());
+		foreach ($options['options'] as $_option) {
+			if ($this->_helper()->isOptionAffectingPrice($this->_getOrderItem()->getProduct()->getOptionById($_option['option_id']))) {
+				unset($requestOptions[$_option['option_id']]);
+			}
+		}
+
 		// + operator instead of array_merge to handle duplicate numeric keys
-		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];
+		$options['info_buyRequest']['options'] = $requestOptions + $options['info_buyRequest']['options'];
 		
 		// add additional request parameters (necessary for changed files)
 		$request = $this->getRequest()->getParams();
 		unset($request['options']);
+		unset($request['qty']);
 		$options['info_buyRequest'] = $request + $options['info_buyRequest'];
 
 		// unset generated file data in original buyRequest

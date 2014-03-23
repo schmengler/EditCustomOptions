@@ -88,12 +88,8 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 		$options = parent::getOptions();
 		foreach ($options as $key => $option) {
 			/* @var $option Mage_Catalog_Model_Product_Option */
-			foreach ($option->getValuesCollection() as $value) {
-				/* @var $value Mage_Catalog_Model_Product_Option_Value */
-				if ($value->getPrice() * 1 > 0) {
-					unset($options[$key]);
-					continue 2;
-				}
+			if (Mage::helper('editcustomoptions')->isOptionAffectingPrice($option)) {
+				unset($options[$key]);
 			}
 		}
 		return $options;
