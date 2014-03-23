@@ -44,38 +44,7 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 	 */
 	protected function _getBuyRequest()
 	{
-		$buyRequest = new Varien_Object();
-		$_options = array();
-		foreach ($this->_getItemOptions() as $_option) {
-			if ($_option['option_type'] === 'file') {
-				$_option['option_value'] = unserialize($_option['option_value']);
-			}
-			$_options[$_option['option_id']] = $_option['option_value'];
-		}
-		$buyRequest->setOptions($_options);
-		return $buyRequest;
-	}
-	/**
-	 * Return custom options from item
-	 * 
-	 * @see Mage_Sales_Block_Order_Item_Renderer_Default::getItemOptions()
-	 * @return array
-	 */
-	protected function _getItemOptions()
-	{
-		$result = array();
-		if ($options = $this->_item->getProductOptions()) {
-			if (isset($options['options'])) {
-				$result = array_merge($result, $options['options']);
-			}
-			if (isset($options['additional_options'])) {
-				$result = array_merge($result, $options['additional_options']);
-			}
-			if (isset($options['attributes_info'])) {
-				$result = array_merge($result, $options['attributes_info']);
-			}
-		}
-		return $result;
+		return Mage::helper(SSE_EditCustomOptions_Helper_Buyrequest::ALIAS)->getBuyRequestFromOrderItem($this->_item);
 	}
 	/**
 	 * Unset all options with prices

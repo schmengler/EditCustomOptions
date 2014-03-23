@@ -107,31 +107,22 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 	protected function _getUpdatedBuyRequest()
 	{
 		$options = $this->_getOrderItem()->getProductOptions();
+		$originalRequest = $options['info_buyRequest'];
+		$updateRequest = $this->getRequest()->getParams();
 
-		// replace options in original buyRequest array, if they do not affect price
-		$requestOptions = $this->getRequest()->getParam('options', array());
 		foreach ($options['options'] as $_option) {
+			// unset options that affect price in request
 			if ($this->_helper()->isOptionAffectingPrice($this->_getOrderItem()->getProduct()->getOptionById($_option['option_id']))) {
-				unset($requestOptions[$_option['option_id']]);
+				unset($updateRequest['options'][$_option['option_id']]);
 			}
-		}
-
-		// + operator instead of array_merge to handle duplicate numeric keys
-		$options['info_buyRequest']['options'] = $requestOptions + $options['info_buyRequest']['options'];
-		
-		// add additional request parameters (necessary for changed files)
-		$request = $this->getRequest()->getParams();
-		unset($request['options']);
-		unset($request['qty']);
-		$options['info_buyRequest'] = $request + $options['info_buyRequest'];
-
-		// unset generated file data in original buyRequest
-		foreach ($options['options'] as $_option) {
+			// unset generated file data in original buyRequest
 			if ($_option['option_type'] === 'file') {
-				unset($options['info_buyRequest']['options'][$_option['option_id']]);
+				unset($originalRequest['options'][$_option['option_id']]);
 			}
 		}
-		return new Varien_Object($options['info_buyRequest']);
+
+		return Mage::helper(SSE_EditCustomOptions_Helper_Buyrequest::ALIAS)
+			->mergeBuyRequest($originalRequest, $updateRequest);
 	}
 	/**
 	 * Returns the order item
