@@ -27,18 +27,7 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 		$this->_item = $item;
 
 		$_product = $this->_item->getProduct();
-		//BEGIN buyRequest
-		$_buyRequest = new Varien_Object();
-		$_options = array();
-		foreach ($this->_getItemOptions() as $_option) {
-			if ($_option['option_type'] === 'file') {
-				$_option['option_value'] = unserialize($_option['option_value']);
-			}
-			$_options[$_option['option_id']] = $_option['option_value'];
-		}
-		$_buyRequest->setOptions($_options);
-		//END buyRequest
-		Mage::helper('catalog/product')->prepareProductOptions($_product, $_buyRequest);
+		Mage::helper('catalog/product')->prepareProductOptions($_product, $this->_getBuyRequest());
 		$this->addOptionRenderer('text', 'catalog/product_view_options_type_text', 'catalog/product/view/options/type/text.phtml')
 	         ->addOptionRenderer('file', 'catalog/product_view_options_type_file', 'catalog/product/view/options/type/file.phtml')
 	         ->addOptionRenderer('select', 'catalog/product_view_options_type_select', 'catalog/product/view/options/type/select.phtml')
@@ -47,6 +36,24 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 	         ->setProduct($_product);
 
 		return $this;
+	}
+	/**
+	 * Returns buyRequest object for custom options of order item
+	 * 
+	 * @return Varien_Object
+	 */
+	protected function _getBuyRequest()
+	{
+		$buyRequest = new Varien_Object();
+		$_options = array();
+		foreach ($this->_getItemOptions() as $_option) {
+			if ($_option['option_type'] === 'file') {
+				$_option['option_value'] = unserialize($_option['option_value']);
+			}
+			$_options[$_option['option_id']] = $_option['option_value'];
+		}
+		$buyRequest->setOptions($_options);
+		return $buyRequest;
 	}
 	/**
 	 * Return custom options from item
