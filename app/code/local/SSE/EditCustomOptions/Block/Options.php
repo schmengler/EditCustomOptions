@@ -27,15 +27,20 @@ class SSE_EditCustomOptions_Block_Options extends Mage_Catalog_Block_Product_Vie
 		$this->_item = $item;
 
 		$_product = $this->_item->getProduct();
+		//BEGIN buyRequest
 		$_buyRequest = new Varien_Object();
 		$_options = array();
 		foreach ($this->_getItemOptions() as $_option) {
+			if ($_option['option_type'] === 'file') {
+				$_option['option_value'] = unserialize($_option['option_value']);
+			}
 			$_options[$_option['option_id']] = $_option['option_value'];
 		}
 		$_buyRequest->setOptions($_options);
+		//END buyRequest
 		Mage::helper('catalog/product')->prepareProductOptions($_product, $_buyRequest);
 		$this->addOptionRenderer('text', 'catalog/product_view_options_type_text', 'catalog/product/view/options/type/text.phtml')
-	         ->addOptionRenderer('file', 'catalog/product_view_options_type_file', 'sse/editcustomoptions/catalog/product/view/options/type/file.phtml')
+	         ->addOptionRenderer('file', 'catalog/product_view_options_type_file', 'catalog/product/view/options/type/file.phtml')
 	         ->addOptionRenderer('select', 'catalog/product_view_options_type_select', 'catalog/product/view/options/type/select.phtml')
 	         ->addOptionRenderer('date', 'catalog/product_view_options_type_date', 'catalog/product/view/options/type/date.phtml')
 	         ->setTemplate('catalog/product/view/options.phtml')

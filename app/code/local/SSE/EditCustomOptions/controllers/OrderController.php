@@ -110,6 +110,18 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 		$options = $this->_getOrderItem()->getProductOptions();
 		// + operator instead of array_merge to handle duplicate numeric keys
 		$options['info_buyRequest']['options'] = $this->getRequest()->getParam('options', array()) + $options['info_buyRequest']['options'];
+		
+		// add additional request parameters (necessary for changed files)
+		$request = $this->getRequest()->getParams();
+		unset($request['options']);
+		$options['info_buyRequest'] = $request + $options['info_buyRequest'];
+
+		// unset file data in original info_BuyRequest
+		foreach ($options['options'] as $_option) {
+			if ($_option['option_type'] === 'file') {
+				unset($options['info_buyRequest']['options'][$_option['option_id']]);
+			}
+		}
 		return $options['info_buyRequest'];
 	}
 	/**
