@@ -11,6 +11,9 @@
         <reference name="root">
             <action method="setTemplate"><template>page/popup.phtml</template></action>
         </reference>
+        <reference name="head">
+            <action method="addJs"><script>varien/product.js</script></action>
+        </reference>
         <reference name="content">
             <block type="editcustomoptions/popup" name="customoptions_popup" template="sse/editcustomoptions/popup.phtml">
             </block>

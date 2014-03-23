@@ -5,7 +5,7 @@
  * @author Fabian Schmengler
  *
  */
-class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
+class SSE_EditCustomOptions_Block_Popup extends Mage_Catalog_Block_Product_View
 {
 	const ALIAS = 'editcustomoptions/popup';
 
@@ -36,23 +36,15 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Core_Block_Template
 		$wrapperBlock->append($optionsBlock, 'options');
 	}
 	/**
-	 * Set order item
-	 * 
-	 * @param Mage_Sales_Model_Order_Item $item
-	 * @return SSE_EditCustomOptions_Block_Popup
-	 */
-	public function setItem(Mage_Sales_Model_Order_Item $item)
-	{
-		$this->_item = $item;
-		return $this;
-	}
-	/**
 	 * Returns order item
 	 * 
 	 * @return Mage_Sales_Model_Order_Item
 	 */
 	public function getItem()
 	{
+		if ($this->_item === null) {
+			$this->_item = Mage::registry('current_item');
+		}
 		return $this->_item;
 	}
 	public function getQty()

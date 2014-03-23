@@ -11,8 +11,9 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 
 	public function editAction()
 	{
+		Mage::register('current_item', $this->_getOrderItem());
+		Mage::register('product', $this->_getOrderItem()->getProduct());
 		$this->loadLayout();
-		$this->getLayout()->getBlock('customoptions_popup')->setItem($this->_getOrderItem());
 		$this->renderLayout();
 	}
 	/**

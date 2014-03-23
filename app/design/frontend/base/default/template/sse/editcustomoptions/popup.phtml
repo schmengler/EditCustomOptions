@@ -1,21 +1,94 @@
 <?php
+/**
+ * Main template for the popup, contains form and JavaScript
+ * 
+ * @author Fabian Schmengler
+ * 
+ */
+
 /* @var $this SSE_EditCustomOptions_Block_Popup */
 ?>
-	<h3><?php echo $this->__('Custom Options'); ?></h3>
-	<form method="post" target="_parent" action="<?php echo $this->getFormAction() ?>">
-		<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
+
+<h3><?php echo $this->__('Custom Options'); ?></h3>
+<form method="post" target="_parent" action="<?php echo $this->getFormAction() ?>" id="product_addtocart_form">
+	<input type="hidden" name="form_key" value="<?php echo Mage::getSingleton('core/session')->getFormKey() ?>" />
 <?php
     echo $this->getChildHtml('wrapper');
 ?>
-		<h3><?php echo $this->__('Quantity'); ?></h3>
-		<input type="text" readonly="readonly" name="qty" value="<?php echo $this->getQty(); ?>" />
-		<p class="note"><?php echo $this->__('Field disabled for editing'); ?></p>
-		<div class="buttons-set">
-			<button type="submit" class="button btn-save"><span><?php echo $this->__('OK'); ?></span></button>
-			<button type="reset" class="button btn-cancel" onclick="closeWindow();"><span><?php echo $this->__('Cancel'); ?></span></button>
-		</div>
-	</form>
-	
+	<h3><?php echo $this->__('Quantity'); ?></h3>
+	<input type="text" readonly="readonly" name="qty" value="<?php echo $this->getQty(); ?>" />
+	<p class="note"><?php echo $this->__('Field disabled for editing'); ?></p>
+	<div class="buttons-set">
+		<button type="button" class="button btn-save" onclick="productAddToCartForm.submit(this)"><span><?php echo $this->__('OK'); ?></span></button>
+		<button type="button" class="button btn-cancel" onclick="closeWindow();"><span><?php echo $this->__('Cancel'); ?></span></button>
+	</div>
+</form>
+
+<?php
+/**
+ * Initialize form for validation
+ * 
+ * @see catalog/product/view.phtml
+ */
+?>
+<script type="text/javascript">
+//<![CDATA[
+		var optionsPrice = new Product.OptionsPrice(<?php echo $this->getJsonConfig() ?>);
+        var productAddToCartForm = new VarienForm('product_addtocart_form');
+        productAddToCartForm.submit = function(button, url) {
+            if (this.validator.validate()) {
+                var form = this.form;
+                var oldUrl = form.action;
+
+                if (url) {
+                   form.action = url;
+                }
+                var e = null;
+                try {
+                    this.form.submit();
+                } catch (e) {
+                }
+                this.form.action = oldUrl;
+                if (e) {
+                    throw e;
+                }
+
+                if (button && button != 'undefined') {
+                    button.disabled = true;
+                }
+            }
+        }.bind(productAddToCartForm);
+
+        productAddToCartForm.submitLight = function(button, url){
+            if(this.validator) {
+                var nv = Validation.methods;
+                delete Validation.methods['required-entry'];
+                delete Validation.methods['validate-one-required'];
+                delete Validation.methods['validate-one-required-by-name'];
+                // Remove custom datetime validators
+                for (var methodName in Validation.methods) {
+                    if (methodName.match(/^validate-datetime-.*/i)) {
+                        delete Validation.methods[methodName];
+                    }
+                }
+
+                if (this.validator.validate()) {
+                    if (url) {
+                        this.form.action = url;
+                    }
+                    this.form.submit();
+                }
+                Object.extend(Validation.methods, nv);
+            }
+        }.bind(productAddToCartForm);
+    //]]>
+</script>
+
+<?php
+/**
+ * Function to close popup
+ */
+?>
 <script type="text/javascript">// <![CDATA[
 function closeWindow() {
 	if(parent.Windows && frameElement) {
