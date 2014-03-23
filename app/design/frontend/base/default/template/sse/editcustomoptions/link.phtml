@@ -1,4 +1,12 @@
 <?php
+/**
+ * Template for link that opens custom options popup
+ * 
+ * @author Fabian Schmengler <fabian@schmengler-se.de>
+ * @category SSE
+ * @package SSE_EditCustomOptions
+ */
+
 /* @var $this SSE_EditCustomOptions_Block_Link */
 ?>
 <a href="#" onclick="return false;" id="<?php echo $this->getOptionsDivId(); ?>">Edit Custom Options</a>
@@ -6,11 +14,11 @@
 
 <script type="text/javascript">// <![CDATA[
 (function(){
-	$('<?php echo $this->getOptionsDivId(); ?>').observe('click', function() {
-		var url ='<?php echo $this->getPopupUrl(); ?>'
-	    var win = new Window({className:'magento',title:'Configure Product Custom Options',url:url,width:820,height:600,minimizable:false,maximizable:false,showEffectOptions:{duration:0.4},hideEffectOptions:{duration:0.4}});
-	    win.setZIndex(100);
-	    win.showCenter(true);
-	});
+    $('<?php echo $this->getOptionsDivId(); ?>').observe('click', function() {
+        var url ='<?php echo $this->getPopupUrl(); ?>'
+        var win = new Window({className:'magento',title:'Configure Product Custom Options',url:url,width:820,height:600,minimizable:false,maximizable:false,showEffectOptions:{duration:0.4},hideEffectOptions:{duration:0.4}});
+        win.setZIndex(100);
+        win.showCenter(true);
+    });
 })();
 // ]]></script>

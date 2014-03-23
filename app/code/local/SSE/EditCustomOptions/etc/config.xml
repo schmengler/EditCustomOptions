@@ -1,4 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+/**
+ * This module adds the possibility to change custom options of ordered items
+ * from the order overview in the customer account.
+ *
+ * @author Fabian Schmengler <fabian@schmengler-se.de>
+ * @category SSE
+ * @package SSE_EditCustomOptions
+ */
+-->
 <config>
     <modules>
         <SSE_EditCustomOptions>
@@ -23,14 +33,14 @@
         </blocks>
     </global>
     <frontend>
-    	<layout>
-    		<updates>
-    			<editcustomoptions>
-    				<file>sse_editcustomoptions.xml</file>
-    			</editcustomoptions>
-    		</updates>
-    	</layout>
-    	<events>
+        <layout>
+            <updates>
+                <editcustomoptions>
+                    <file>sse_editcustomoptions.xml</file>
+                </editcustomoptions>
+            </updates>
+        </layout>
+        <events>
            <core_block_abstract_to_html_before>
                <observers>
                    <editcustomoptions>
@@ -49,7 +59,7 @@
                    </editcustomoptions>
                </observers>
            </core_block_abstract_to_html_after>
-    	</events>
+        </events>
         <routers>
             <editcustomoptions>
                 <use>standard</use>
