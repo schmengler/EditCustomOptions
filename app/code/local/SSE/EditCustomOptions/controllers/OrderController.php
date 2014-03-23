@@ -9,11 +9,34 @@ class SSE_EditCustomOptions_OrderController extends Mage_Core_Controller_Front_A
 {
 	protected $_orderItem;
 
+	/**
+	 * Return module helper
+	 * 
+	 * @return SSE_EditCustomOptions_Helper_Data
+	 */
+	protected function _helper()
+	{
+		return Mage::helper('editcustomoptions');
+	}
+	/**
+	 * Return session instance
+	 * 
+	 * @return Mage_Core_Model_Session
+	 */
+	protected function _session()
+	{
+		return Mage::getSingleton('core/session');
+	}
 	public function editAction()
 	{
-		Mage::register('current_item', $this->_getOrderItem());
-		Mage::register('product', $this->_getOrderItem()->getProduct());
-		$this->loadLayout();
+		if ($this->_helper()->isOrderEditable($this->_getOrderItem()->getOrder())) {
+			Mage::register('current_item', $this->_getOrderItem());
+			Mage::register('product', $this->_getOrderItem()->getProduct());
+			$this->loadLayout();
+		} else {
+			$this->_session()->addError($this->__('Order cannot be changed anymore'));
+			$this->loadLayout(array('default', 'error_noform'));
+		}
 		$this->renderLayout();
 	}
 	/**

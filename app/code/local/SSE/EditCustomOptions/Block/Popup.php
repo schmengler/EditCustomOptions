@@ -17,6 +17,16 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Catalog_Block_Product_View
 	protected $_item;
 
 	/**
+	 * Do not create other product related blocks
+	 * 
+	 * (non-PHPdoc)
+	 * @see Mage_Catalog_Block_Product_View::_prepareLayout()
+	 */
+	protected function _prepareLayout()
+	{
+		return $this;
+	}
+	/**
 	 * initialize options block
 	 * 
 	 * (non-PHPdoc)
@@ -24,7 +34,9 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Catalog_Block_Product_View
 	 */
 	protected function _beforeToHtml()
 	{
-		parent::_construct();
+		if (!$this->getItem()) {
+			return parent::_beforeToHtml();
+		}
 
 		$wrapperBlock = $this->getLayout()->createBlock('catalog/product_view', 'additional.product.info.customoptions.wrapper',
 				array('template' => 'catalog/product/view/options/wrapper.phtml', 'product_id' => $this->getItem()->getProductId()));
@@ -34,6 +46,8 @@ class SSE_EditCustomOptions_Block_Popup extends Mage_Catalog_Block_Product_View
 		$optionsBlock = $this->getLayout()->createBlock(SSE_EditCustomOptions_Block_Options::ALIAS, 'additional.product.info.customoptions.options');
 		$optionsBlock->init($this->getItem());
 		$wrapperBlock->append($optionsBlock, 'options');
+
+		return parent::_beforeToHtml();
 	}
 	/**
 	 * Returns order item

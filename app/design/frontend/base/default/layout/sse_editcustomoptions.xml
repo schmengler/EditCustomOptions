@@ -15,8 +15,19 @@
             <action method="addJs"><script>varien/product.js</script></action>
         </reference>
         <reference name="content">
-            <block type="editcustomoptions/popup" name="customoptions_popup" template="sse/editcustomoptions/popup.phtml">
-            </block>
+            <block type="editcustomoptions/popup" name="customoptions_popup" template="sse/editcustomoptions/popup.phtml" />
         </reference>
 	</editcustomoptions_order_edit>
+	<error_noform>
+	    <reference name="content">
+            <action method="insert">
+               <blockName>global_messages</blockName>
+               <sibling></sibling>
+               <after></after>
+               <alias>global_messages</alias>
+            </action>
+            <block type="core/template" name="customoptions_close" template="sse/editcustomoptions/close.phtml"></block>
+	        <remove name="customoptions_popup" />
+	    </reference>
+	</error_noform>
 </layout>

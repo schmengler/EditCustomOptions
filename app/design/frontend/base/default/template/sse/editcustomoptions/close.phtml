@@ -1,0 +1,27 @@
+<?php 
+/**
+ * Template with only close button used for authorization errors
+ * 
+ * @author Fabian Schmengler
+ * 
+ */
+/* @var $this Mage_Core_Block_Template */
+?>
+<div class="buttons-set">
+	<button type="button" class="button btn-cancel" onclick="closeWindow()"><span><?php echo $this->__('Close'); ?></span></button>
+</div>
+<?php
+/**
+ * Function to close popup
+ */
+?>
+<script type="text/javascript">// <![CDATA[
+function closeWindow() {
+	if(parent.Windows && frameElement) {
+		var mydiv = $(frameElement).up("div");
+		var mydivid = mydiv.id;
+		var win = parent.Windows.getWindow(mydivid);
+		win.close();
+	}
+}
+//]]></script>
